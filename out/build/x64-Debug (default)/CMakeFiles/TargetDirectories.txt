@@ -1,0 +1,6 @@
+C:/Users/Michael/Desktop/GLODON/Glodon_exam/glodon_take_home/VS/out/build/x64-Debug (default)/CMakeFiles/take_home_test_library.dir
+C:/Users/Michael/Desktop/GLODON/Glodon_exam/glodon_take_home/VS/out/build/x64-Debug (default)/CMakeFiles/rebuild_cache.dir
+C:/Users/Michael/Desktop/GLODON/Glodon_exam/glodon_take_home/VS/out/build/x64-Debug (default)/CMakeFiles/test.dir
+C:/Users/Michael/Desktop/GLODON/Glodon_exam/glodon_take_home/VS/out/build/x64-Debug (default)/CMakeFiles/unit_tests.dir
+C:/Users/Michael/Desktop/GLODON/Glodon_exam/glodon_take_home/VS/out/build/x64-Debug (default)/CMakeFiles/take_home_test.dir
+C:/Users/Michael/Desktop/GLODON/Glodon_exam/glodon_take_home/VS/out/build/x64-Debug (default)/CMakeFiles/edit_cache.dir
