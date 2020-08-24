@@ -1,7 +1,7 @@
 //
 // Created by Nikolay Shulga on 2019-06-18.
 //
-
+#pragma once
 #include "deserialize.h"
 
 // STL
@@ -24,6 +24,7 @@ using namespace rapidjson;
 
 
 std::vector<LineSegment> deserialize(Document& doc) {
+    
     std::vector<LineSegment> lineSegments;
     auto const& lines_json = doc["lines"];
     if (lines_json.IsArray()) {
@@ -41,10 +42,12 @@ std::vector<LineSegment> deserialize(Document& doc) {
 
                 LineSegment lineSeg(start_x, start_y, end_x, end_y, id);
                 lineSegments.push_back(lineSeg);
+                
             }
         }
     }
-
+    //This is assuming proper input. If the input is empty or ill-formed, this may return bad data
+    return lineSegments;
 }
 
 std::vector<LineSegment> deserialize_from_string(std::string const& json_data) {
@@ -52,4 +55,5 @@ std::vector<LineSegment> deserialize_from_string(std::string const& json_data) {
     doc.Parse(json_data.c_str());
     std::vector<LineSegment> lines;
     lines = deserialize(doc);
+    return lines;
 }
