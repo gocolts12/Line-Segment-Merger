@@ -27,23 +27,32 @@ int main() {
 		
 		//If the slope-intercept combo doesn't exist in the map, make a new 
 		//entry and insert
-		if (search != collinearLinesMap.end()) 
+		if (search == collinearLinesMap.end()) 
 		{
+			std::cout << "new entry" << std::endl;
 			std::vector<LineSegment> lines;
 			lines.push_back(i);
 			collinearLinesMap.insert(std::make_pair(slopeInterceptPair, lines));
 		}
 		//Otherwise we have the slope-intercept combo in the map already
 		//so just append the segment to the list of collinear segments
-		else { collinearLinesMap[slopeInterceptPair].push_back(i); }
+		else 
+		{ 
+			std::cout << "found entry already" << std::endl;
+			collinearLinesMap[slopeInterceptPair].push_back(i); 
+		}
 
 	}
 
-
+	
+	for (auto &i : collinearLinesMap)
+	{
+		std::cout << i.second.size();
+	}
 
 	//When we sort, we sort based on start_x to transpose all segments onto a single axis
-	std::sort(begin(lineSegments), end(lineSegments), [](auto l, auto r) {
-		return l < r; });
+	//std::sort(begin(lineSegments), end(lineSegments), [](auto l, auto r) {
+	//	return l < r; });
 
 	//std::cout << lineSegments[1].get_start_x() << lineSegments[2].get_start_x() << std::endl;
 
