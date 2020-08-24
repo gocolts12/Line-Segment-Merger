@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include "deserialize.h"
 #include "linesegment.h"
@@ -6,7 +7,26 @@
 #include <map>
 #include <string>
 #include <utility>
-#pragma once
+
+std::vector<LineSegment> mergeHelper(std::vector<LineSegment> lineSegments)
+{
+	//First we sort the collinear lines on the start_x in order 
+	//to transpose all segments onto a single axis. The advantage of this is 
+	//it allows us to only traverse the list once, and we can simply compare
+	//each element to the next in the list based on their x_start values
+	std::sort(begin(lineSegments), end(lineSegments), [](auto l, auto r) {
+		return l < r; });
+}
+
+std::vector<LineSegment> mergeLines(std::map<std::pair<double, double>, std::vector<LineSegment>> &collinearLinesMap)
+{
+	std::vector<LineSegment> resultVector;
+	for (auto& i : collinearLinesMap)
+	{
+		//Merge the result vector with the vector returned with the merged lines
+		resultVector.insert(resultVector.begin(), resultVector.end(), mergeHelper(i.second).end());
+	}
+}
 
 int main() {
 
@@ -41,18 +61,9 @@ int main() {
 			std::cout << "found entry already" << std::endl;
 			collinearLinesMap[slopeInterceptPair].push_back(i); 
 		}
-
 	}
 
-	
-	for (auto &i : collinearLinesMap)
-	{
-		std::cout << i.second.size();
-	}
-
-	//When we sort, we sort based on start_x to transpose all segments onto a single axis
-	//std::sort(begin(lineSegments), end(lineSegments), [](auto l, auto r) {
-	//	return l < r; });
+	std::vector<LineSegment> resultVector = mergeLines(collinearLinesMap);
 
 	//std::cout << lineSegments[1].get_start_x() << lineSegments[2].get_start_x() << std::endl;
 
