@@ -40,7 +40,22 @@ public:
 	{
 		return start_x;
 	}
-
+	double get_end_x()
+	{
+		return end_x;
+	}
+	double get_start_y()
+	{
+		return start_y;
+	}
+	double get_end_y()
+	{
+		return end_y;
+	}
+	std::string get_id()
+	{
+		return id;
+	}
 	bool operator<(LineSegment line)
 	{
 		if (this->start_x < line.get_start_x()) return true;
