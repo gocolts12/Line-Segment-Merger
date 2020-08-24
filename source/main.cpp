@@ -14,8 +14,32 @@ std::vector<LineSegment> mergeHelper(std::vector<LineSegment> lineSegments)
 	//to transpose all segments onto a single axis. The advantage of this is 
 	//it allows us to only traverse the list once, and we can simply compare
 	//each element to the next in the list based on their x_start values
-	std::sort(begin(lineSegments), end(lineSegments), [](auto l, auto r) {
-		return l < r; });
+	std::sort(begin(lineSegments), end(lineSegments), [](auto l, auto r) { return l < r; });
+	
+	//Help performance a bit by caching the size in a variable
+	int vecSize = lineSegments.size();
+
+	for (int i = 0; i < vecSize; ++i)
+	{
+		//We loop until the 2nd to last element to prevent segfaulting 
+		if (i < vecSize - 1)
+		{
+			//If the next line's x1 lies between the current line's x values, they must
+			//overlap, so we merge them
+			if (lineSegments[i].get_start_x() <= lineSegments[i+1].get_start_x()
+				&& lineSegments[i+1].get_start_x() <= lineSegments[i].get_end_x())
+			{
+				//Now we create a new line segment using the extrema of x and y of the two segments
+				LineSegment mergedLine(std::min(lineSegments[i].get_start_x(), lineSegments[i+1].get_start_x()), 
+									   std::max(lineSegments[i].get_end_x(), lineSegments[i+1].get_end_x()),
+									   std::min(lineSegments[i].get_start_y(), lineSegments[i+1].get_start_y()),
+									   std::max(lineSegments[i].get_end_y(), lineSegments[i+1].get_end_y()), lineSegments[i].get_id());
+			}
+		}
+
+		//if (i == vecSize - 1)
+
+	}
 }
 
 std::vector<LineSegment> mergeLines(std::map<std::pair<double, double>, std::vector<LineSegment>> &collinearLinesMap)
