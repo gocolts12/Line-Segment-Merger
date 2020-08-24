@@ -1,3 +1,4 @@
+#pragma once
 #include <string>
 
 class LineSegment {
@@ -22,7 +23,7 @@ private:
 
 public:
 	LineSegment(double x1, double y1, double x2, double y2, std::string seg_id) :
-		start_x{ x1 }, start_y{ y1 }, end_x{ x2 }, end_y{ y2 }, id{ seg_id }
+		start_x( x1 ), start_y( y1 ), end_x( x2 ), end_y( y2 ), id( seg_id )
 	{
 		calculateSlope();
 		calculateYIntercept();
@@ -35,7 +36,7 @@ public:
 	{
 		return yIntercept;
 	}
-	double get_start_x()
+	double get_start_x() 
 	{
 		return start_x;
 	}
@@ -45,9 +46,10 @@ public:
 		if (this->start_x < line.get_start_x()) return true;
 		else return false;
 	}
-	bool operator<=(LineSegment line)
-	{
-		if (this->start_x < line.get_start_x() || this->start_x <= line.get_start_x()) return true;
-		else return false;
-	}
+
+	//bool operator<=(LineSegment line)
+	//{
+	//	if (this->start_x < line.get_start_x() || this->start_x <= line.get_start_x()) return true;
+	//	else return false;
+	//}
 };
