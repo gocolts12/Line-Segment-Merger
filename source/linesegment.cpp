@@ -10,6 +10,13 @@
 	//double slope;
 	//double yIntercept;
 
+	LineSegment::LineSegment(double x1, double y1, double x2, double y2, std::string seg_id) :
+	start_x(x1), start_y(y1), end_x(x2), end_y(y2), id(seg_id)
+	{
+		calculateSlope();
+		calculateYIntercept();
+	}
+
 	void LineSegment::calculateSlope()
 	{
 		slope = (end_y - start_y) / (end_x - start_x);
@@ -19,12 +26,6 @@
 		yIntercept = start_y - (start_x * slope);
 	}
 
-	LineSegment::LineSegment(double x1, double y1, double x2, double y2, std::string seg_id) :
-		start_x(x1), start_y(y1), end_x(x2), end_y(y2), id(seg_id)
-	{
-		calculateSlope();
-		calculateYIntercept();
-	}
 	double LineSegment::getSlope()
 	{
 		return slope;
