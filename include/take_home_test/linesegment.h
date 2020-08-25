@@ -1,5 +1,7 @@
 #pragma once
 #include <string>
+#ifndef LineSegment
+#define LineSegment
 
 class LineSegment {
 
@@ -12,55 +14,40 @@ private:
 	double slope;
 	double yIntercept;
 
-	void calculateSlope()
-	{
-		slope = (end_y - start_y) / (end_x - start_x);
-	}
-	void calculateYIntercept()
-	{
-		yIntercept = start_y - (start_x * slope);
-	}
+	void calculateSlope();
+
+	void calculateYIntercept();
+
 
 public:
-	LineSegment(double x1, double y1, double x2, double y2, std::string seg_id) :
-		start_x( x1 ), start_y( y1 ), end_x( x2 ), end_y( y2 ), id( seg_id )
-	{
-		calculateSlope();
-		calculateYIntercept();
-	}
-	double getSlope()
-	{
-		return slope;
-	}
-	double getYIntercept()
-	{
-		return yIntercept;
-	}
-	double get_start_x() 
-	{
-		return start_x;
-	}
-	double get_end_x()
-	{
-		return end_x;
-	}
-	double get_start_y()
-	{
-		return start_y;
-	}
-	double get_end_y()
-	{
-		return end_y;
-	}
-	std::string get_id()
-	{
-		return id;
-	}
-	bool operator<(LineSegment line)
-	{
-		if (this->start_x < line.get_start_x()) return true;
-		else return false;
-	}
+	LineSegment(double x1, double y1, double x2, double y2, std::string seg_id);
+
+	double getSlope();
+
+	double getYIntercept();
+
+	double get_start_x();
+	
+	double get_end_x();
+
+	double get_start_y();
+
+	double get_end_y();
+
+	std::string get_id();
+
+	bool operator<(LineSegment line);
+
+	
+	//operator == for test cases later
+	//bool operator==(LineSegment line)
+	//{
+	//	if (this->start_x == line.get_start_x() && this->start_y == line.get_start_y() &&
+	//		this->end_x == line.get_end_x() && this->end_y == line.get_end_y())
+	//		return true;
+	//	else
+	//		return false;
+	//}
 
 	//bool operator<=(LineSegment line)
 	//{
@@ -68,3 +55,4 @@ public:
 	//	else return false;
 	//}
 };
+#endif
