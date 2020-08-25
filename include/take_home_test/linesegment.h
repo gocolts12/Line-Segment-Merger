@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
-#ifndef LineSegment
-#define LineSegment
+#ifndef LineSegment_H
+#define LineSegment_H
 
 class LineSegment {
 
