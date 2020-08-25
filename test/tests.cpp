@@ -21,8 +21,21 @@ TEST_CASE("no merges") {
     resultVector = mergeLines(map);
 
     std::vector<LineSegment> test_case_lines;
-    //use emplace to push_back in-place
+    //use emplace for easy push_back in-place
     test_case_lines.emplace_back(-395.24361297250138, -598.0232377709511, 373.44034013711515, -582.9714893905727, "0-2");
+    test_case_lines.emplace_back(373.44034013711515, -582.9714893905727, 562.5097926743379, 67.6201009971137, "0-1");
+
+    REQUIRE(test_case_lines == resultVector);
+}
+
+TEST_CASE("single line, no merge possible") {
+    std::string input{ "{\"lines\":[{\"id\":\"0-1\",\"start\":[373.44034013711515,-582.9714893905727],\"end\":[562.5097926743379,67.6201009971137]}]}" };
+    std::vector<LineSegment> resultVector = deserialize_from_string(input);
+    auto map = collinearMapInsertion(resultVector);
+    resultVector = mergeLines(map);
+
+    std::vector<LineSegment> test_case_lines;
+    //use emplace for easy push_back in-place
     test_case_lines.emplace_back(373.44034013711515, -582.9714893905727, 562.5097926743379, 67.6201009971137, "0-1");
 
     REQUIRE(test_case_lines == resultVector);
@@ -35,7 +48,7 @@ TEST_CASE("merge all lines into one") {
     resultVector = mergeLines(map);
 
     std::vector<LineSegment> test_case_lines;
-    //use emplace to push_back in-place
+    //use emplace for easy push_back in-place
     test_case_lines.emplace_back(1.0, 1.0, 7.0, 7.0, "0-1");
 
     REQUIRE(test_case_lines == resultVector);
@@ -48,7 +61,7 @@ TEST_CASE("merge multiple separate sets ") {
     resultVector = mergeLines(map);
 
     std::vector<LineSegment> test_case_lines;
-    //use emplace to push_back in-place
+    //use emplace for easy push_back in-place
     test_case_lines.emplace_back(1.0, 1.0, 7.0, 7.0, "0-1");
     test_case_lines.emplace_back(0.0, 2.0, 4.0, 6.0, "0-3");
 
