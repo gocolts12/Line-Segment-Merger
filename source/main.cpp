@@ -21,25 +21,55 @@ std::vector<LineSegment> mergeHelper(std::vector<LineSegment> lineSegments)
 
 	for (int i = 0; i < vecSize; ++i)
 	{
-		//We loop until the 2nd to last element to prevent segfaulting 
-		if (i < vecSize - 1)
+
+		//If we've reached the final segment, try and combine with the 
+		//previous line segment. 
+		if (i == (vecSize - 1))
+		{
+			if (lineSegments[i - 1].get_start_x() <= lineSegments[i].get_start_x()
+				&& lineSegments[i].get_start_x() <= lineSegments[i-1].get_end_x())
+			{
+				//Now we construct a new line segment using the extrema of x and y of the two segments
+				LineSegment mergedLine(std::min(lineSegments[i].get_start_x(), lineSegments[i + 1].get_start_x()),
+					std::max(lineSegments[i-1].get_end_x(), lineSegments[i].get_end_x()),
+					std::min(lineSegments[i-1].get_start_y(), lineSegments[i].get_start_y()),
+					std::max(lineSegments[i-1].get_end_y(), lineSegments[i].get_end_y()), lineSegments[i-1].get_id());
+
+				//Overwrite the first segment with the new segment,  
+				//and remove the second line segment used in the merge
+				lineSegments[i-1] = mergedLine;
+				std::vector<LineSegment>::iterator it = lineSegments.begin() + (i);
+				lineSegments.erase(it);
+				break;
+			}
+		}
+		//Otherwise, we compare the current element to the next
+		else
 		{
 			//If the next line's x1 lies between the current line's x values, they must
 			//overlap, so we merge them
 			if (lineSegments[i].get_start_x() <= lineSegments[i+1].get_start_x()
 				&& lineSegments[i+1].get_start_x() <= lineSegments[i].get_end_x())
 			{
-				//Now we create a new line segment using the extrema of x and y of the two segments
+				//Now we construct a new line segment using the extrema of x and y of the two segments
 				LineSegment mergedLine(std::min(lineSegments[i].get_start_x(), lineSegments[i+1].get_start_x()), 
 									   std::max(lineSegments[i].get_end_x(), lineSegments[i+1].get_end_x()),
 									   std::min(lineSegments[i].get_start_y(), lineSegments[i+1].get_start_y()),
 									   std::max(lineSegments[i].get_end_y(), lineSegments[i+1].get_end_y()), lineSegments[i].get_id());
+				
+				//Overwrite the first segment with the new segment,  
+				//and remove the second line segment used in the merge
+				lineSegments[i] = mergedLine;
+				std::vector<LineSegment>::iterator it = lineSegments.begin() + (i+1);
+				lineSegments.erase(it);
+				//Decrease the size of the vector
+				vecSize--;
+				i--;
+				
 			}
 		}
-
-		//if (i == vecSize - 1)
-
 	}
+	return lineSegments;
 }
 
 std::vector<LineSegment> mergeLines(std::map<std::pair<double, double>, std::vector<LineSegment>> &collinearLinesMap)
@@ -50,6 +80,7 @@ std::vector<LineSegment> mergeLines(std::map<std::pair<double, double>, std::vec
 		//Merge the result vector with the vector returned with the merged lines
 		resultVector.insert(resultVector.begin(), resultVector.end(), mergeHelper(i.second).end());
 	}
+	return resultVector;
 }
 
 int main() {
