@@ -14,7 +14,7 @@ std::vector<LineSegment> mergeHelper(std::vector<LineSegment> lineSegments)
 	//to transpose all segments onto a single axis. The advantage of this is 
 	//it allows us to only traverse the list once, and we can simply compare
 	//each element to the next in the list based on their x_start values
-	std::sort(begin(lineSegments), end(lineSegments), [](auto l, auto r) { return l < r; });
+	std::sort(begin(lineSegments), end(lineSegments), [](const auto &l, const auto &r) { return l < r; });
 	
 	//Help performance a bit by caching the size in a variable
 	int vecSize = lineSegments.size();
@@ -27,22 +27,24 @@ std::vector<LineSegment> mergeHelper(std::vector<LineSegment> lineSegments)
 		//previous line segment. 
 		if (i == (vecSize - 1))
 		{
-			if (lineSegments[i - 1].get_start_x() <= lineSegments[i].get_start_x()
-				&& lineSegments[i].get_start_x() <= lineSegments[i-1].get_end_x())
-			{
-				//Now we construct a new line segment using the extrema of x and y of the two segments
-				LineSegment mergedLine(std::min(lineSegments[i-1].get_start_x(), lineSegments[i].get_start_x()),
-									   std::min(lineSegments[i-1].get_start_y(), lineSegments[i].get_start_y()),
-									   std::max(lineSegments[i-1].get_end_x(), lineSegments[i].get_end_x()),
-									   std::max(lineSegments[i-1].get_end_y(), lineSegments[i].get_end_y()), lineSegments[i-1].get_id());
+			//Wrote this case, but actually may not be needed in the end
 
-				//Overwrite the first segment with the new segment,  
-				//and remove the second line segment used in the merge
-				lineSegments[i-1] = mergedLine;
-				std::vector<LineSegment>::iterator it = lineSegments.begin() + (i);
-				lineSegments.erase(it);
+			//if (lineSegments[i - 1].get_start_x() <= lineSegments[i].get_start_x()
+			//	&& lineSegments[i].get_start_x() <= lineSegments[i-1].get_end_x())
+			//{
+			//	//Now we construct a new line segment using the extrema of x and y of the two segments
+			//	LineSegment mergedLine(std::min(lineSegments[i-1].get_start_x(), lineSegments[i].get_start_x()),
+			//						   std::min(lineSegments[i-1].get_start_y(), lineSegments[i].get_start_y()),
+			//						   std::max(lineSegments[i-1].get_end_x(), lineSegments[i].get_end_x()),
+			//						   std::max(lineSegments[i-1].get_end_y(), lineSegments[i].get_end_y()), lineSegments[i-1].get_id());
+
+			//	//Overwrite the first segment with the new segment,  
+			//	//and remove the second line segment used in the merge
+			//	lineSegments[i-1] = mergedLine;
+			//	std::vector<LineSegment>::iterator it = lineSegments.begin() + (i);
+			//	lineSegments.erase(it);
 				break;
-			}
+			//}
 		}
 		//Otherwise, we compare the current element to the next
 		else
@@ -68,7 +70,6 @@ std::vector<LineSegment> mergeHelper(std::vector<LineSegment> lineSegments)
 				//variable back because the list size has changed
 				vecSize--;
 				i--;
-				
 			}
 		}
 	}

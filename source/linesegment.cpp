@@ -23,6 +23,7 @@
 	}
 	void LineSegment::calculateYIntercept()
 	{
+		if(slope)
 		yIntercept = start_y - (start_x * slope);
 	}
 
@@ -34,44 +35,38 @@
 	{
 		return yIntercept;
 	}
-	double LineSegment::get_start_x()
+	double LineSegment::get_start_x() const
 	{
 		return start_x;
 	}
-	double LineSegment::get_end_x()
+	double LineSegment::get_end_x() const
 	{
 		return end_x;
 	}
-	double LineSegment::get_start_y()
+	double LineSegment::get_start_y() const
 	{
 		return start_y;
 	}
-	double LineSegment::get_end_y()
+	double LineSegment::get_end_y() const
 	{
 		return end_y;
 	}
-	std::string LineSegment::get_id()
+	std::string LineSegment::get_id() const
 	{
 		return id;
 	}
-	bool LineSegment::operator<(LineSegment line)
+	bool LineSegment::operator<(const LineSegment &line)
 	{
-		if (this->start_x < line.get_start_x()) return true;
+		if (start_x < line.get_start_x()) return true;
 		else return false;
 	}
 
 	//operator == for test cases later
-	//bool operator==(LineSegment line)
-	//{
-	//	if (this->start_x == line.get_start_x() && this->start_y == line.get_start_y() &&
-	//		this->end_x == line.get_end_x() && this->end_y == line.get_end_y())
-	//		return true;
-	//	else
-	//		return false;
-	//}
-
-	//bool operator<=(LineSegment line)
-	//{
-	//	if (this->start_x < line.get_start_x() || this->start_x <= line.get_start_x()) return true;
-	//	else return false;
-	//}
+	bool LineSegment::operator==(const LineSegment& line) 
+	{
+		if (start_x == line.get_start_x() && start_y == line.get_start_y() &&
+			end_x == line.get_end_x() && end_y == line.get_end_y())
+			return true;
+		else
+			return false;
+	}
