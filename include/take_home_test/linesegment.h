@@ -36,11 +36,11 @@ public:
 
 	std::string get_id()const;
 
-	bool operator<(const LineSegment &line);
+	bool operator<(const LineSegment &line)const;
 
 	
 	//operator == for test cases later
-	bool operator==(const LineSegment& rhs);
+	bool operator==(const LineSegment& rhs)const;
 
 };
 #endif
