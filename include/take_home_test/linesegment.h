@@ -26,33 +26,21 @@ public:
 
 	double getYIntercept();
 
-	double get_start_x();
+	double get_start_x() const;
 	
-	double get_end_x();
+	double get_end_x()const;
 
-	double get_start_y();
+	double get_start_y()const;
 
-	double get_end_y();
+	double get_end_y()const;
 
-	std::string get_id();
+	std::string get_id()const;
 
-	bool operator<(LineSegment line);
+	bool operator<(const LineSegment &line);
 
 	
 	//operator == for test cases later
-	//bool operator==(LineSegment line)
-	//{
-	//	if (this->start_x == line.get_start_x() && this->start_y == line.get_start_y() &&
-	//		this->end_x == line.get_end_x() && this->end_y == line.get_end_y())
-	//		return true;
-	//	else
-	//		return false;
-	//}
+	bool operator==(const LineSegment& rhs);
 
-	//bool operator<=(LineSegment line)
-	//{
-	//	if (this->start_x < line.get_start_x() || this->start_x <= line.get_start_x()) return true;
-	//	else return false;
-	//}
 };
 #endif
