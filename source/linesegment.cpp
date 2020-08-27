@@ -15,7 +15,6 @@
 	}
 	void LineSegment::calculateYIntercept()
 	{
-		if(slope)
 		yIntercept = start_y - (start_x * slope);
 	}
 
