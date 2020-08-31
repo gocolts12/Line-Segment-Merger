@@ -12,7 +12,6 @@ In order to produce a deliverable in a reasonable time frame, there were a coupl
 -	I do not have any handling for lines with undefined slopes, though that may not be too difficult to implement with further research
 -	I’m not entirely sure how to continuously stream in JSON input, so I simply split my code into source and header files that can be included in a file that will be able to pipe in input
 Function Runtime Analysis 
--	collinearMapInsertion – O(n) where n is the number of total line segments
+-	collinearMapInsertion – O(n) where n is the number of total line segments (was actually O(log(n) when it was std::map, but now is O(n) with an unordered_map)
 -	mergeHelper – O(m*log(m)) for sorting where m is the number of collinear line segments + O(m) for the merge operations. Combined runtime = O(m*log(m))
 -	mergeLines –  O(n*log(n)) where n is the total number of line segments + O(n) for std::vector::insert. Combined runtime = O(n*log(n))
-
