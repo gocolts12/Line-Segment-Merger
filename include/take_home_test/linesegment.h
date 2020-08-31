@@ -13,6 +13,7 @@ private:
 	double end_y;
 	double slope;
 	double yIntercept;
+	double epsilon; //our precision variable for double comparisons
 
 	void calculateSlope();
 

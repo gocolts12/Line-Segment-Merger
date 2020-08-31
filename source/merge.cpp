@@ -1,4 +1,5 @@
 #pragma once
+#define _USE_MATH_DEFINES
 
 #include "linesegment.h"
 #include "hash.h"
@@ -8,6 +9,7 @@
 #include <unordered_map>
 #include <string>
 #include <utility>
+#include <cmath>
 
 std::vector<LineSegment> mergeHelper(std::vector<LineSegment>& lineSegments)
 {
@@ -22,15 +24,40 @@ std::vector<LineSegment> mergeHelper(std::vector<LineSegment>& lineSegments)
 
 	for (int i = 0; i < vecSize; ++i)
 	{
-		//Check if the vector only has one element, or if we're at the last element
-		//In both cases, we just break out of the loop because the work is done
+		//Check if we're at the last element and just break out of the loop because the work is done
 		if (i == (vecSize - 1)) break;
-		//We compare the current element to the next
 		else
 		{
+			//We need to check if the slopes are undefined (or infinity, for the purposes
+			//of this program. If they are, all the x values will all be equal, 
+			//so we need to compare y values instead
+			if (std::isinf(lineSegments[i].getSlope()) && std::isinf(lineSegments[i+1].getSlope()))
+			{
+				if (lineSegments[i].get_start_y() <= lineSegments[i + 1].get_start_y()
+					&& lineSegments[i + 1].get_start_y() <= lineSegments[i].get_end_y())
+				{
+					//Now we construct a new line segment using the extrema of x and y of the two segments
+					LineSegment mergedLine(std::min(lineSegments[i].get_start_x(), lineSegments[i + 1].get_start_x()),
+						std::min(lineSegments[i].get_start_y(), lineSegments[i + 1].get_start_y()),
+						std::max(lineSegments[i].get_end_x(), lineSegments[i + 1].get_end_x()),
+						std::max(lineSegments[i].get_end_y(), lineSegments[i + 1].get_end_y()), lineSegments[i].get_id());
+
+					//Overwrite the first segment with the new segment,  
+					//and remove the second line segment used in the merge
+					lineSegments[i] = mergedLine;
+					std::vector<LineSegment>::iterator it = lineSegments.begin() + (i + 1);
+					lineSegments.erase(it);
+
+					//Decrease the size of the vector and move the loop control
+					//variable back because the list size has changed
+					vecSize--;
+					i--;
+				}
+			}
+
 			//If the next line's x1 lies between the current line's x values, they must
 			//overlap, so we merge them
-			if (lineSegments[i].get_start_x() <= lineSegments[i + 1].get_start_x()
+			else if (lineSegments[i].get_start_x() <= lineSegments[i + 1].get_start_x()
 				&& lineSegments[i + 1].get_start_x() <= lineSegments[i].get_end_x())
 			{
 				//Now we construct a new line segment using the extrema of x and y of the two segments

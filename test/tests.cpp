@@ -19,7 +19,6 @@ TEST_CASE("no merges") {
     std::vector<LineSegment> resultVector = deserialize_from_string(input);
     auto map = collinearMapInsertion(resultVector);
     resultVector = mergeLines(map);
-    std::sort(begin(resultVector), end(resultVector), [](const auto& l, const auto& r) { return l < r; });
 
     std::vector<LineSegment> test_case_lines;
     //use emplace for easy push_back in-place
@@ -38,7 +37,6 @@ TEST_CASE("single line, no merge possible") {
     std::vector<LineSegment> resultVector = deserialize_from_string(input);
     auto map = collinearMapInsertion(resultVector);
     resultVector = mergeLines(map);
-    std::sort(begin(resultVector), end(resultVector), [](const auto& l, const auto& r) { return l < r; });
 
 
     std::vector<LineSegment> test_case_lines;
@@ -55,7 +53,6 @@ TEST_CASE("merge all lines into one") {
     std::vector<LineSegment> resultVector = deserialize_from_string(input);
     auto map = collinearMapInsertion(resultVector);
     resultVector = mergeLines(map);
-    std::sort(begin(resultVector), end(resultVector), [](const auto& l, const auto& r) { return l < r; });
 
     std::vector<LineSegment> test_case_lines;
     //use emplace for easy push_back in-place
@@ -81,6 +78,51 @@ TEST_CASE("merge multiple separate sets ") {
     test_case_lines.emplace_back(0.0, 2.0, 4.0, 6.0, "0-3");
 
     //Sort for assurance of equality
+    std::sort(begin(test_case_lines), end(test_case_lines), [](const auto& l, const auto& r) { return l < r; });
+    std::sort(begin(resultVector), end(resultVector), [](const auto& l, const auto& r) { return l < r; });
+
+    REQUIRE(test_case_lines == resultVector);
+
+}
+
+TEST_CASE("merge 2 vertical lines") {
+    std::string input{ "{\"lines\":[{\"id\":\"0-1\",\"start\":[0.0,0.0],\"end\":[0.0,3.0]},{\"id\":\"0-2\",\"start\":[0.0,3.0],\"end\":[0.0,5.0]}]}" };
+    
+    std::vector<LineSegment> resultVector = deserialize_from_string(input);
+    
+    auto map = collinearMapInsertion(resultVector);
+    
+    resultVector = mergeLines(map);
+
+    std::vector<LineSegment> test_case_lines;
+
+    //use emplace for easy push_back in-place
+    test_case_lines.emplace_back(0.0, 0.0, 0.0, 5.0, "0-1");
+
+    //Sort both for assurance of equality
+    std::sort(begin(test_case_lines), end(test_case_lines), [](const auto& l, const auto& r) { return l < r; });
+    std::sort(begin(resultVector), end(resultVector), [](const auto& l, const auto& r) { return l < r; });
+
+    REQUIRE(test_case_lines == resultVector);
+
+}
+
+TEST_CASE("2 vertical lines that do not merge") {
+    std::string input{ "{\"lines\":[{\"id\":\"0-1\",\"start\":[0.0,0.0],\"end\":[0.0,3.0]},{\"id\":\"0-2\",\"start\":[0.0,4.0],\"end\":[0.0,5.0]}]}" };
+
+    std::vector<LineSegment> resultVector = deserialize_from_string(input);
+
+    auto map = collinearMapInsertion(resultVector);
+
+    resultVector = mergeLines(map);
+
+    std::vector<LineSegment> test_case_lines;
+
+    //use emplace for easy push_back in-place
+    test_case_lines.emplace_back(0.0, 0.0, 0.0, 3.0, "0-1");
+    test_case_lines.emplace_back(0.0, 4.0, 0.0, 5.0, "0-2");
+
+    //Sort both for assurance of equality
     std::sort(begin(test_case_lines), end(test_case_lines), [](const auto& l, const auto& r) { return l < r; });
     std::sort(begin(resultVector), end(resultVector), [](const auto& l, const auto& r) { return l < r; });
 
