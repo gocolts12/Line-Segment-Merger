@@ -1,10 +1,11 @@
 #pragma once
 
 #include "linesegment.h"
+#include "hash.h"
 
 #include <vector>
 #include <algorithm>
-#include <map>
+#include <unordered_map>
 #include <string>
 #include <utility>
 
@@ -23,7 +24,7 @@ std::vector<LineSegment> mergeHelper(std::vector<LineSegment>& lineSegments)
 	{
 		//Check if the vector only has one element, or if we're at the last element
 		//In both cases, we just break out of the loop because the work is done
-		if (vecSize == 1 || i == (vecSize - 1)) break;
+		if (i == (vecSize - 1)) break;
 		//We compare the current element to the next
 		else
 		{
@@ -54,7 +55,7 @@ std::vector<LineSegment> mergeHelper(std::vector<LineSegment>& lineSegments)
 	return lineSegments;
 }
 
-std::vector<LineSegment> mergeLines(std::map<std::pair<double, double>, std::vector<LineSegment>>& collinearLinesMap)
+std::vector<LineSegment> mergeLines(std::unordered_map<Key, std::vector<LineSegment>>& collinearLinesMap)
 {
 	std::vector<LineSegment> resultVector;
 	for (auto& i : collinearLinesMap)
@@ -66,32 +67,32 @@ std::vector<LineSegment> mergeLines(std::map<std::pair<double, double>, std::vec
 	return resultVector;
 }
 
-std::map < std::pair<double, double>, std::vector<LineSegment>> collinearMapInsertion(std::vector<LineSegment>& lineSegments)
+std::unordered_map<Key, std::vector<LineSegment>> collinearMapInsertion(std::vector<LineSegment>& lineSegments)
 {
 	//We use a map containing the slope and yIntercept mapping to a vector 
 	//of line segments that have equal slopes and y intercepts. All this lines are
 	//collinear, and therefore may be mergeable. Not the cleanest map implementation,
 	//but lets get it working first
-	std::map<std::pair<double, double>, std::vector<LineSegment>> collinearLinesMap;
+	std::unordered_map<Key, std::vector<LineSegment>> collinearLinesMap;
 
 	for (auto& i : lineSegments)
 	{
-		auto slopeInterceptPair = std::make_pair(i.getSlope(), i.getYIntercept());
-		auto search = collinearLinesMap.find(slopeInterceptPair);
+		Key newKey;
+		newKey.slopeInterceptPair = std::make_pair(i.getSlope(), i.getYIntercept());
 
 		//If the slope-intercept combo doesn't exist in the map, make a new 
 		//entry and insert
-		if (search == collinearLinesMap.end())
+		if (collinearLinesMap.find(newKey) == collinearLinesMap.end())
 		{
 			std::vector<LineSegment> lines;
 			lines.push_back(i);
-			collinearLinesMap.insert(std::make_pair(slopeInterceptPair, lines));
+			collinearLinesMap.insert(std::make_pair(newKey, lines));
 		}
 		//Otherwise we have the slope-intercept combo in the map already
 		//so just append the segment to the list of collinear segments
 		else
 		{
-			collinearLinesMap[slopeInterceptPair].push_back(i);
+			collinearLinesMap[newKey].push_back(i);
 		}
 	}
 	return collinearLinesMap;

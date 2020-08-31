@@ -19,11 +19,16 @@ TEST_CASE("no merges") {
     std::vector<LineSegment> resultVector = deserialize_from_string(input);
     auto map = collinearMapInsertion(resultVector);
     resultVector = mergeLines(map);
+    std::sort(begin(resultVector), end(resultVector), [](const auto& l, const auto& r) { return l < r; });
 
     std::vector<LineSegment> test_case_lines;
     //use emplace for easy push_back in-place
     test_case_lines.emplace_back(-395.24361297250138, -598.0232377709511, 373.44034013711515, -582.9714893905727, "0-2");
     test_case_lines.emplace_back(373.44034013711515, -582.9714893905727, 562.5097926743379, 67.6201009971137, "0-1");
+
+    //Sort for assurance of equality
+    std::sort(begin(test_case_lines), end(test_case_lines), [](const auto& l, const auto& r) { return l < r; });
+    std::sort(begin(resultVector), end(resultVector), [](const auto& l, const auto& r) { return l < r; });
 
     REQUIRE(test_case_lines == resultVector);
 }
@@ -33,12 +38,16 @@ TEST_CASE("single line, no merge possible") {
     std::vector<LineSegment> resultVector = deserialize_from_string(input);
     auto map = collinearMapInsertion(resultVector);
     resultVector = mergeLines(map);
+    std::sort(begin(resultVector), end(resultVector), [](const auto& l, const auto& r) { return l < r; });
+
 
     std::vector<LineSegment> test_case_lines;
     //use emplace for easy push_back in-place
     test_case_lines.emplace_back(373.44034013711515, -582.9714893905727, 562.5097926743379, 67.6201009971137, "0-1");
 
+
     REQUIRE(test_case_lines == resultVector);
+
 }
 
 TEST_CASE("merge all lines into one") {
@@ -46,12 +55,18 @@ TEST_CASE("merge all lines into one") {
     std::vector<LineSegment> resultVector = deserialize_from_string(input);
     auto map = collinearMapInsertion(resultVector);
     resultVector = mergeLines(map);
+    std::sort(begin(resultVector), end(resultVector), [](const auto& l, const auto& r) { return l < r; });
 
     std::vector<LineSegment> test_case_lines;
     //use emplace for easy push_back in-place
     test_case_lines.emplace_back(1.0, 1.0, 7.0, 7.0, "0-1");
 
+    //Sort for assurance of equality
+    std::sort(begin(test_case_lines), end(test_case_lines), [](const auto& l, const auto& r) { return l < r; });
+    std::sort(begin(resultVector), end(resultVector), [](const auto& l, const auto& r) { return l < r; });
+
     REQUIRE(test_case_lines == resultVector);
+
 }
 
 TEST_CASE("merge multiple separate sets ") {
@@ -65,11 +80,10 @@ TEST_CASE("merge multiple separate sets ") {
     test_case_lines.emplace_back(1.0, 1.0, 7.0, 7.0, "0-1");
     test_case_lines.emplace_back(0.0, 2.0, 4.0, 6.0, "0-3");
 
-    for (auto i : resultVector)
-    {
-        std::cout << "x1: " << i.get_start_x() << " y1: " << i.get_start_y() << " x2: " << i.get_end_x() << " y2: " << i.get_end_y() << " id: " << i.get_id() << std::endl;
-    }
+    //Sort for assurance of equality
+    std::sort(begin(test_case_lines), end(test_case_lines), [](const auto& l, const auto& r) { return l < r; });
+    std::sort(begin(resultVector), end(resultVector), [](const auto& l, const auto& r) { return l < r; });
 
     REQUIRE(test_case_lines == resultVector);
-       
+
 }

@@ -21,12 +21,12 @@ include_directories(include/take_home_test)
 set(LIBRARY_SOURCES source/deserialize.cpp)
 set(LIBRARY_HEADERS include/take_home_test/deserialize.h)
 
-add_library(take_home_test_library ${LIBRARY_SOURCES} ${LIBRARY_HEADERS} "include/take_home_test/linesegment.h" "source/linesegment.cpp" "include/take_home_test/merge.h" "source/merge.cpp")
+add_library(take_home_test_library ${LIBRARY_SOURCES} ${LIBRARY_HEADERS} "include/take_home_test/linesegment.h" "source/linesegment.cpp" "include/take_home_test/merge.h" "source/merge.cpp" "source/hash.cpp" "include/take_home_test/hash.h")
 
 # exec sources go here
 set(EXEC_SOURCES source/main.cpp)
 
-add_executable(take_home_test ${EXEC_SOURCES} "include/take_home_test/linesegment.h" "source/linesegment.cpp" "include/take_home_test/merge.h" "source/merge.cpp")
+add_executable(take_home_test ${EXEC_SOURCES} "include/take_home_test/linesegment.h" "source/linesegment.cpp" "include/take_home_test/merge.h" "source/merge.cpp" "source/hash.cpp" "include/take_home_test/hash.h")
 target_link_libraries(take_home_test take_home_test_library)
 
 # Tests
@@ -35,7 +35,7 @@ enable_testing()
 # Your tests
 set(TEST_SOURCES test/tests.cpp)
 
-add_executable(unit_tests ${TEST_SOURCES} "include/take_home_test/linesegment.h" "source/linesegment.cpp" "include/take_home_test/merge.h" "source/merge.cpp")
+add_executable(unit_tests ${TEST_SOURCES} "include/take_home_test/linesegment.h" "source/linesegment.cpp" "include/take_home_test/merge.h" "source/merge.cpp" "source/hash.cpp" "include/take_home_test/hash.h")
 
 target_link_libraries(unit_tests take_home_test_library)
 
