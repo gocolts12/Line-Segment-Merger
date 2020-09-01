@@ -18,15 +18,15 @@ include_directories(include/rapidjson/internal)
 include_directories(include/take_home_test)
 
 # Your library sources go here
-set(LIBRARY_SOURCES source/deserialize.cpp)
-set(LIBRARY_HEADERS include/take_home_test/deserialize.h)
+set(LIBRARY_SOURCES source/deserialize.cpp source/hash.cpp source/linesegment.cpp source/merge.cpp )
+set(LIBRARY_HEADERS include/take_home_test/deserialize.h include/take_home_test/hash.h include/take_home_test/merge.h include/take_home_test/linesegment.h )
 
-add_library(take_home_test_library ${LIBRARY_SOURCES} ${LIBRARY_HEADERS} "include/take_home_test/linesegment.h" "source/linesegment.cpp" "include/take_home_test/merge.h" "source/merge.cpp" "source/hash.cpp" "include/take_home_test/hash.h")
+add_library(take_home_test_library ${LIBRARY_SOURCES} ${LIBRARY_HEADERS}) #"include/take_home_test/linesegment.h" "source/linesegment.cpp" "include/take_home_test/merge.h" "source/merge.cpp" "source/hash.cpp" "include/take_home_test/hash.h")
 
 # exec sources go here
 set(EXEC_SOURCES source/main.cpp)
 
-add_executable(take_home_test ${EXEC_SOURCES} "include/take_home_test/linesegment.h" "source/linesegment.cpp" "include/take_home_test/merge.h" "source/merge.cpp" "source/hash.cpp" "include/take_home_test/hash.h")
+add_executable(take_home_test ${EXEC_SOURCES} ${take_home_test_library}) #"include/take_home_test/linesegment.h" "source/linesegment.cpp" "include/take_home_test/merge.h" "source/merge.cpp" "source/hash.cpp" "include/take_home_test/hash.h")
 target_link_libraries(take_home_test take_home_test_library)
 
 # Tests
