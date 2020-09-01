@@ -6,6 +6,7 @@
 #include <cmath>
 #include <utility>
 #include <math.h>
+#include <limits>
 
 
 	LineSegment::LineSegment(double x1, double y1, double x2, double y2, std::string seg_id) :
