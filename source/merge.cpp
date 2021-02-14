@@ -2,14 +2,21 @@
 #define _USE_MATH_DEFINES
 
 #include "linesegment.h"
-#include "hash.h"
+//#include "hash.h"
 
 #include <vector>
 #include <algorithm>
+#include <map>
 #include <unordered_map>
 #include <string>
 #include <utility>
 #include <cmath>
+#include <thread>
+#include <iostream>
+#include <mutex>
+
+
+std::mutex mutex;
 
 std::vector<LineSegment> mergeHelper(std::vector<LineSegment>& lineSegments)
 {
@@ -82,44 +89,69 @@ std::vector<LineSegment> mergeHelper(std::vector<LineSegment>& lineSegments)
 	return lineSegments;
 }
 
-std::vector<LineSegment> mergeLines(std::unordered_map<Key, std::vector<LineSegment>>& collinearLinesMap)
+void thread_mergeLines(std::map<std::pair<double, double>, std::vector<LineSegment>>& collinearLinesMap, const unsigned totalThreads,
+					   const unsigned threadID, std::vector<std::pair<double, double>> keys, std::vector<LineSegment> &resultVec)
 {
-	std::vector<LineSegment> resultVector;
-	for (auto& i : collinearLinesMap)
+	const int threadStart = threadID * totalThreads / totalThreads;
+	const int threadEnd = (threadID + 1) * totalThreads / totalThreads;
+
+	for (int i = threadStart; i < threadEnd; i++)
 	{
-		//Merge the result vector with the vector returned with the merged lines
-		std::vector<LineSegment> temp = mergeHelper(i.second);
-		resultVector.insert(resultVector.end(), temp.begin(), temp.end());
+		mutex.lock();
+		auto l = mergeHelper(collinearLinesMap[keys[i]]);
+		mutex.unlock();
+		resultVec.insert(resultVec.begin(), l.begin(), l.end());
 	}
-	return resultVector;
+	
 }
 
-std::unordered_map<Key, std::vector<LineSegment>> collinearMapInsertion(std::vector<LineSegment>& lineSegments)
+std::vector<LineSegment> mergeLines(std::map<std::pair<double, double>, std::vector<LineSegment>>& collinearLinesMap)
+{
+	std::vector<LineSegment> resultVector1;
+	std::vector<LineSegment> resultVector2;
+	std::vector<std::pair<double, double>> keysVec;
+
+	for (auto& i : collinearLinesMap)
+	{
+		keysVec.push_back(i.first);
+	}
+
+	std::thread t0(thread_mergeLines, collinearLinesMap, 2, 0, keysVec, resultVector1);
+	std::thread t1(thread_mergeLines, collinearLinesMap, 2, 1, keysVec, resultVector2);
+
+	t0.join();
+	t1.join();
+	
+	resultVector1.insert(resultVector1.begin(), resultVector2.begin(), resultVector2.end());
+
+	return resultVector1;
+}
+std::map < std::pair<double, double>, std::vector<LineSegment>> collinearMapInsertion(std::vector<LineSegment>& lineSegments)
 {
 	//We use a map containing the slope and yIntercept mapping to a vector 
 	//of line segments that have equal slopes and y intercepts. All this lines are
 	//collinear, and therefore may be mergeable. Not the cleanest map implementation,
 	//but lets get it working first
-	std::unordered_map<Key, std::vector<LineSegment>> collinearLinesMap;
+	std::map<std::pair<double, double>, std::vector<LineSegment>> collinearLinesMap;
 
 	for (auto& i : lineSegments)
 	{
-		Key newKey;
-		newKey.slopeInterceptPair = std::make_pair(i.getSlope(), i.getYIntercept());
+		auto slopeInterceptPair = std::make_pair(i.getSlope(), i.getYIntercept());
+		auto search = collinearLinesMap.find(slopeInterceptPair);
 
 		//If the slope-intercept combo doesn't exist in the map, make a new 
 		//entry and insert
-		if (collinearLinesMap.find(newKey) == collinearLinesMap.end())
+		if (search == collinearLinesMap.end())
 		{
 			std::vector<LineSegment> lines;
 			lines.push_back(i);
-			collinearLinesMap.insert(std::make_pair(newKey, lines));
+			collinearLinesMap.insert(std::make_pair(slopeInterceptPair, lines));
 		}
 		//Otherwise we have the slope-intercept combo in the map already
 		//so just append the segment to the list of collinear segments
 		else
 		{
-			collinearLinesMap[newKey].push_back(i);
+			collinearLinesMap[slopeInterceptPair].push_back(i);
 		}
 	}
 	return collinearLinesMap;

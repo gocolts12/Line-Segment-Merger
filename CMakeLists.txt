@@ -18,8 +18,8 @@ include_directories(include/rapidjson/internal)
 include_directories(include/take_home_test)
 
 # Your library sources go here
-set(LIBRARY_SOURCES source/deserialize.cpp source/hash.cpp source/linesegment.cpp source/merge.cpp )
-set(LIBRARY_HEADERS include/take_home_test/deserialize.h include/take_home_test/hash.h include/take_home_test/merge.h include/take_home_test/linesegment.h )
+set(LIBRARY_SOURCES source/deserialize.cpp source/linesegment.cpp source/merge.cpp )
+set(LIBRARY_HEADERS include/take_home_test/deserialize.h include/take_home_test/merge.h include/take_home_test/linesegment.h )
 
 add_library(take_home_test_library ${LIBRARY_SOURCES} ${LIBRARY_HEADERS}) 
 
