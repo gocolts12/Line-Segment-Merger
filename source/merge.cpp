@@ -116,8 +116,8 @@ std::vector<LineSegment> mergeLines(std::map<std::pair<double, double>, std::vec
 		keysVec.push_back(i.first);
 	}
 
-	std::thread t0(thread_mergeLines, collinearLinesMap, 2, 0, keysVec, resultVector1);
-	std::thread t1(thread_mergeLines, collinearLinesMap, 2, 1, keysVec, resultVector2);
+	std::thread t0(thread_mergeLines, collinearLinesMap, 2, 0, keysVec, std::ref(resultVector1));
+	std::thread t1(thread_mergeLines, collinearLinesMap, 2, 1, keysVec, std::ref(resultVector2));
 
 	t0.join();
 	t1.join();
